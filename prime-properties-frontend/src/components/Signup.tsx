@@ -1,49 +1,42 @@
-import React from 'react';
-import Link from 'react-router-dom';
+import React, { useState } from 'react';
+import useAxios from '../hooks/useAxios';
 
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup'; // Validation schema
-
-interface SignupFormInputs {
+interface UserData {
   firstName: string;
   lastName: string;
   email: string;
   contactNumber: string;
   password: string;
+  role: string;
 }
 
-const schema = yup.object().shape({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  email: yup
-    .string()
-    .email('Invalid email format')
-    .required('Email is required'),
-  contactNumber: yup
-    .string()
-    .min(10, 'Mobile number must be 10 degit')
-    .max(10, 'Mobile number must be 10 degit')
-    .required('Mobile is required'),
-  password: yup
-    .string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
-});
-
 const Signup = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
+  const [formData, setFormData] = useState<UserData>({
+    email: '',
+    firstName: '',
+    lastName: '',
+    contactNumber: '',
+    password: '',
+    role: '',
   });
 
-  const onSubmit = async (data: SignupFormInputs) => {
-    console.log(data);
+  const { response, error, loading, fetchData } = useAxios();
 
-    // Handle form submission
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    console.log(formData);
+    e.preventDefault();
+    await fetchData({
+      url: '/api/auth/register',
+      method: 'POST',
+      data: formData,
+    });
   };
 
   return (
@@ -51,81 +44,94 @@ const Signup = () => {
       <div className=" bg-slate-200 px-10 py-10 rounded-3xl border-2 border-gray-200">
         <p className="text-3xl font-semibold">Sign up</p>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit}>
           <div className=" mt-6">
             <div>
               <label className=" text-lg font-medium">First name</label>
               <input
-                {...register('firstName')}
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
                 className=" w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent "
                 placeholder="Enter your first name"
+                required
               />
-              {errors.firstName && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.firstName.message}
-                </p>
-              )}
             </div>
 
             <div>
               <label className=" text-lg font-medium">Last name</label>
               <input
-                {...register('lastName')}
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
                 className=" w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent "
                 placeholder="Enter your last name"
+                required
               />
-              {errors.lastName && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.lastName.message}
-                </p>
-              )}
             </div>
 
             <div>
               <label className=" text-lg font-medium">Email</label>
               <input
-                {...register('email')}
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className=" w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent "
-                placeholder="Enter your email"
+                placeholder="Enter your email ID"
+                required
               />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.email.message}
-                </p>
-              )}
             </div>
 
             <div>
               <label className=" text-lg font-medium">Contact number</label>
               <input
-                {...register('contactNumber')}
+                type="text"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleChange}
                 className=" w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent "
                 placeholder="Enter your contact number"
+                required
               />
-              {errors.contactNumber && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.contactNumber.message}
-                </p>
-              )}
             </div>
 
             <div>
-              <label className=" text-lg font-medium">Password</label>
+              <label className="text-lg font-medium">Password</label>
               <input
-                {...register('password')}
-                className=" w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent "
-                placeholder="Set your password"
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent"
+                placeholder="Enter your password"
+                required
               />
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.password.message}
-                </p>
-              )}
             </div>
 
+            <div>
+              <label className="text-lg font-medium">Role</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="w-full border-2 border-gray-100 rounded-xl p-3 mt-1 bg-transparent"
+                required
+              >
+                <option value="" disabled>
+                  Select a role
+                </option>
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+              </select>
+            </div>
+            {error && <div className="text-red-500">{error}</div>}
             <div className="mt-6 flex flex-col gap-y-4">
               <button
                 type="submit"
+                disabled={loading}
                 className="active:scale-[.98] active:duration-75 hover:scale-[1.01] easy-in-out transition-all py-3 rounded-xl bg-violet-500 text-white text-lg font-bold"
               >
                 Sign up
@@ -142,6 +148,9 @@ const Signup = () => {
               </button>
             </div>
           </div>
+          {response && (
+            <div className="text-green-500">Registration successful!</div>
+          )}
         </form>
       </div>
     </div>

@@ -10,7 +10,7 @@ const Navbar = ({ isAuthenticated, onLogout }: NavbarProps) => {
   return (
     <nav className="bg-slate-300 p-3 shadow-md sticky top-0 rounded-xl">
       <div className="container mx-auto flex justify-between items-center">
-        <div className=" text-lime-200 text-3xl font-bold">
+        <div className=" text-lime-800 text-3xl font-bold">
           <Link to="/">Prime Prop</Link>
         </div>
         <div className="flex space-x-4">
