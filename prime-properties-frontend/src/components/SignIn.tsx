@@ -1,8 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import useAxios from '../hooks/useAxios';
-import { loginSuccess } from '../store/authSlice';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface UserData {
   userName: string;
@@ -17,7 +15,7 @@ const SignIn = () => {
 
   const { response, error, loading, fetchData } = useAxios();
 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -27,26 +25,16 @@ const SignIn = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    console.log(formData);
+    // console.log(formData);
     e.preventDefault();
 
-    const result: any = await fetchData({
+    await fetchData({
       url: '/api/auth/login',
       method: 'POST',
       data: formData,
     });
 
-    if (result) {
-      console.log(result);
-    }
-
-    // if (result?.isSuccess) {
-    //   console.log(result.result.user);
-    //   console.log(result.result.token);
-    //   // dispatch(loginSuccess(result.data));
-    // } else {
-    //   console.log(result.error.message);
-    // }
+    navigate('/');
   };
 
   return (
@@ -109,6 +97,7 @@ const SignIn = () => {
               </button>
             </div>
           </div>
+
           {response && <div className="text-green-500">Login successful!</div>}
         </form>
       </div>

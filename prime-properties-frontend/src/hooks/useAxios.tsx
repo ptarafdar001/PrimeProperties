@@ -1,5 +1,7 @@
 import axios, { Method } from 'axios';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../store/authSlice';
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:5251',
@@ -39,9 +41,11 @@ interface UseAxios {
 }
 
 const useAxios = () => {
-  const [response, setResponse] = useState(null);
+  const [response, setResponse] = useState<any>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
 
   let controller = new AbortController();
   useEffect(() => {
@@ -68,6 +72,8 @@ const useAxios = () => {
         signal: controller.signal,
       });
       setResponse(result.data);
+      console.log(result.data);
+      dispatch(loginSuccess(result.data.result.token));
     } catch (error: any) {
       if (axios.isCancel(error)) {
         console.error('Request canceled', error.message);

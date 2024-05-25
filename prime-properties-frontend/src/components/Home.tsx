@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 import Card from './ui/Card';
 import '../styles.css';
+import useAxios from '../hooks/useAxios';
 
 const Home = () => {
+  const { response, error, loading, fetchData } = useAxios();
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPages = 6; // Example total number of pages
 
@@ -26,6 +29,16 @@ const Home = () => {
 
   // const cards = Array.from({ length: 10 });
 
+  const getProperty = async () => {
+    await fetchData({
+      url: '/api/property/allProperty',
+      method: 'GET',
+    });
+  };
+  useEffect(() => {
+    getProperty();
+  }, []);
+
   return (
     <div className=" container mx-auto">
       <div className="flex flex-row item-center ml-6 mt-6">
@@ -37,13 +50,7 @@ const Home = () => {
       <div className="flex flex-col justify-center items-center">
         {/* Render DemoCard components using map */}
         <div className="hidden-scrollbar overflow-y-auto h-[85vh]">
-          {currentPageData.map((item) => (
-            <Card
-              key={item.id}
-              title={item.title}
-              description={item.description}
-            />
-          ))}
+          {response && response.map((item: any) => <Card item={item} />)}
           <div className="">
             <Pagination
               currentPage={currentPage}

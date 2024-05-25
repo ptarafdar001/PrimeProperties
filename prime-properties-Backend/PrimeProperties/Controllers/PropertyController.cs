@@ -7,7 +7,7 @@ using System.Net;
 
 namespace PrimeProperties.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/property")]
     [ApiController]
     public class PropertyController : ControllerBase
     {
@@ -17,8 +17,7 @@ namespace PrimeProperties.Controllers
             _propertyServices = propertyServices;
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("allProperty")]
         public async Task<IActionResult> GetAllProperty()
         {
             try
@@ -56,9 +55,9 @@ namespace PrimeProperties.Controllers
 
         }
 
-        [HttpPost]
-        [Authorize(Roles="Seller")]
-        public async Task<IActionResult> AddISP(PropertyRequestDto property)
+        //[Authorize(Roles = "Seller")]
+        [HttpPost("addProperty")]
+        public async Task<IActionResult> AddProperty([FromBody] PropertyRequestDto property)
         {
             try
             {
@@ -76,9 +75,9 @@ namespace PrimeProperties.Controllers
         }
 
 
-        [HttpPut("{id:Guid}")]
-        [Authorize(Roles = "Seller")]
-        public async Task<IActionResult> UpdateProperty(PropertyRequestDto property, Guid id)
+        [HttpPut("updateProperty/{id:Guid}")]
+        //[Authorize(Roles = "Seller")]
+        public async Task<IActionResult> UpdateProperty([FromBody] PropertyRequestDto property, Guid id)
         {
             try
             {
@@ -100,7 +99,7 @@ namespace PrimeProperties.Controllers
         }
 
         [HttpDelete("{id:Guid}")]
-        [Authorize(Roles = "Seller")]
+        //[Authorize(Roles = "Seller")]
         public async Task<IActionResult> DeleteProperty(Guid id)
         {
             try
