@@ -40,8 +40,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center mt-8">
-      <div className=" bg-slate-200 px-10 py-10 rounded-3xl border-2 border-gray-200">
+    <div className="flex items-center justify-center fixed inset-0 bg-gray-700 bg-opacity-50 backdrop-blur-sm">
+      <div className="mx-auto w-2/5 bg-slate-200 px-10 py-5 rounded-3xl border-2 shadow-md shadow-red-200">
         <p className="text-3xl font-semibold">Sign up</p>
 
         <form onSubmit={handleSubmit}>

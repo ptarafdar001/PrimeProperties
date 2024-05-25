@@ -19,11 +19,11 @@ public class AuthAPIController(IAuthService authService) : ControllerBase
         if (response.Succeeded == false)
         {
             _response.IsSuccess = false;
-            _response.Message = response.Errors.FirstOrDefault()?.Description ?? "Something went worng! Please try again after sometime.";
+            _response.Message = response.Errors.FirstOrDefault()?.Description ?? "Something went wrong! Please try again after sometime.";
             return BadRequest(_response);
         }
 
-        _response.Message = "Registration Successfull";
+        _response.Message = "Registration Successful";
         return Ok(_response);
     }
 

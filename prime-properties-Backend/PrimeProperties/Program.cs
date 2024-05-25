@@ -2,8 +2,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PrimeProperties.Data;
 using PrimeProperties.Models;
+using PrimeProperties.Repositories;
+using PrimeProperties.Repositories.IRepositories;
 using PrimeProperties.Services;
 using PrimeProperties.Services.Iservices;
+using PrimeProperties.Services.IServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,9 @@ builder.Services.AddIdentity<ApplicationsUser, IdentityRole>().AddEntityFramewor
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
+builder.Services.AddScoped<IPropertyServices, PropertyServices>();
+builder.Services.AddScoped<IPropertyRepo, PropertyRepo>();
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,9 +40,12 @@ builder.Services.AddCors(options =>
         options.AddPolicy("AllowSpecificOrigin",
             builder => builder.WithOrigins("http://localhost:5173")
                               .AllowAnyHeader()
-                              .AllowAnyMethod()
-                              .AllowCredentials());
+                              .AllowAnyMethod());
     });
+
+
+
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -48,11 +57,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
+
 app.UseAuthorization();
+
 
 app.MapControllers();
 

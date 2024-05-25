@@ -8,6 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 {
     public DbSet<ApplicationsUser> ApplicationsUsers { get; set; }
 
+    public DbSet<Property> Properties { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -2,7 +2,7 @@ import axios, { Method } from 'axios';
 import { useEffect, useState } from 'react';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://localhost:7213',
+  baseURL: 'http://localhost:5251',
 });
 
 // request interceptor
